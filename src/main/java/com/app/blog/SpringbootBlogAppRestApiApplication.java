@@ -1,0 +1,14 @@
+package com.app.blog;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SpringbootBlogAppRestApiApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringbootBlogAppRestApiApplication.class, args);
+		System.out.println("Hello");
+	}
+
+}
