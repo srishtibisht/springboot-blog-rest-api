@@ -8,7 +8,7 @@ public class SpringbootBlogAppRestApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootBlogAppRestApiApplication.class, args);
-		System.out.println("Hello");
+		
 	}
 
 }
