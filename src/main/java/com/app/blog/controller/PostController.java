@@ -38,12 +38,6 @@ public class PostController {
 		return postService.getAllPosts();
 	}
 
-//	@GetMapping
-//	public List<PostDto> getAllPosts(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-//			@RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize) {
-//		return postService.getAllPosts(pageNo, pageSize);
-//	}
-
 	@GetMapping("/{id}")
 	public ResponseEntity<PostDto> getPostById(@PathVariable long id) {
 		return ResponseEntity.ok(postService.getPostById(id));
