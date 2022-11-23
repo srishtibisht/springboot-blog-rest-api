@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.blog.entity.Post;
 import com.app.blog.payload.PostDto;
+import com.app.blog.payload.PostResponse;
 import com.app.blog.service.PostService;
 import com.app.blog.service.impl.PostServiceImpl;
 
@@ -33,9 +34,23 @@ public class PostController {
 		return new ResponseEntity<PostDto>(postService.createPost(postDto), HttpStatus.CREATED);
 	}
 
+//	@GetMapping
+//	public List<PostDto> getAllPosts(){
+//		return postService.getAllPosts();
+//	}
+
+//	@GetMapping
+//	public List<PostDto> getAllPost(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+//			@RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize) {
+//
+//		return postService.getAllPosts(pageNo,pageSize);
+//	}
+	
 	@GetMapping
-	public List<PostDto> getAllPosts(){
-		return postService.getAllPosts();
+	public PostResponse getAllPost(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize) {
+
+		return postService.getAllPosts(pageNo,pageSize);
 	}
 
 	@GetMapping("/{id}")

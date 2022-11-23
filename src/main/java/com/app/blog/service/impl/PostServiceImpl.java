@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.app.blog.entity.Post;
 import com.app.blog.exception.ResourceNotFoundException;
 import com.app.blog.payload.PostDto;
+import com.app.blog.payload.PostResponse;
 import com.app.blog.repository.PostRepository;
 import com.app.blog.service.PostService;
 
@@ -24,55 +25,50 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public PostDto createPost(PostDto postDto) {
 		Post post = mapToEntity(postDto);
-
 		Post nPost = postRepository.save(post);
-
 		PostDto postResponse = mapToDTO(nPost);
-
 		return postResponse;
 	}
 
-	private PostDto mapToDTO(Post post) {
-
-		PostDto postDto = new PostDto();
-		postDto.setId(post.getId());
-		postDto.setTitle(post.getTitle());
-		postDto.setDescription(post.getDescription());
-		postDto.setContent(post.getContent());
-
-		return postDto;
-
-	}
-
-	private Post mapToEntity(PostDto postDto) {
-
-		Post post = new Post();
-		post.setTitle(postDto.getTitle());
-		post.setDescription(postDto.getDescription());
-		post.setContent(postDto.getContent());
-
-		return post;
-	}
-
-	@Override
-	public List<PostDto> getAllPosts() {
-
-		List<Post> posts = postRepository.findAll();
-		return posts.stream().map(l -> mapToDTO(l)).collect(Collectors.toList());
-
-	}
+//	@Override
+//	public List<PostDto> getAllPosts() {
+//
+//		List<Post> posts = postRepository.findAll();
+//		return posts.stream().map(l -> mapToDTO(l)).collect(Collectors.toList());
+//
+//	}
 	
-//	public List<PostDto> getAllPosts(int pageNo, int pageSize){
+	//get all post using pagination
+//	public List<PostDto> getAllPosts(int pageNo,int pageSize){
 //		
 //		Pageable pageable = PageRequest.of(pageNo, pageSize);
 //		
-//		Page<Post> posts = postRepository.findAll(pageable);
+//		Page<Post> posts= postRepository.findAll(pageable);
 //		
-//		List<Post> listOfPost = posts.getContent();
+//		List<Post> listOfPosts = posts.getContent();
 //		
-//		return  listOfPost.stream().map(i-> mapToDTO(i)).collect(Collectors.toList() );
+//		return listOfPosts.stream().map(l -> mapToDTO(l)).collect(Collectors.toList());
 //		
 //	}
+	
+	//get all post using customize pagination
+	public PostResponse getAllPosts(int pageNo, int pageSize){
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		Page<Post> posts= postRepository.findAll(pageable);
+		
+		List<Post> listOfPosts = posts.getContent();
+		List<PostDto> content = listOfPosts.stream().map(l -> mapToDTO(l)).collect(Collectors.toList());
+		
+		PostResponse postResponse = new PostResponse();
+		postResponse.setContent(content);
+		postResponse.setTotalPages(posts.getTotalPages());
+		postResponse.setTotalElements(posts.getNumberOfElements());
+		postResponse.setLast(posts.isLast());
+		postResponse.setPageSize(posts.getSize());
+		postResponse.setPageNo(posts.getNumber());
+		
+		return postResponse;
+	}
 
 	@Override
 	public PostDto getPostById(long id) {
@@ -97,6 +93,28 @@ public class PostServiceImpl implements PostService {
 		Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
 		
 		postRepository.delete(post);
+	}
+	
+	private PostDto mapToDTO(Post post) {
+
+		PostDto postDto = new PostDto();
+		postDto.setId(post.getId());
+		postDto.setTitle(post.getTitle());
+		postDto.setDescription(post.getDescription());
+		postDto.setContent(post.getContent());
+
+		return postDto;
+
+	}
+
+	private Post mapToEntity(PostDto postDto) {
+
+		Post post = new Post();
+		post.setTitle(postDto.getTitle());
+		post.setDescription(postDto.getDescription());
+		post.setContent(postDto.getContent());
+
+		return post;
 	}
 	
 
