@@ -33,18 +33,20 @@ public class Post {
 
 	@Column(name = "content", nullable = false)
 	private String content;
-	
-	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL,orphanRemoval = true)
+
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Comment> comment = new HashSet<>();
 
 	public Post() {
 		super();
 	}
 
-	public Post(String title, String description, String content) {
+	public Post(String title, String description, String content, Set<Comment> comment) {
+		super();
 		this.title = title;
 		this.description = description;
 		this.content = content;
+		this.comment = comment;
 	}
 
 	public Long getId() {
@@ -79,9 +81,18 @@ public class Post {
 		this.content = content;
 	}
 
+	public Set<Comment> getComment() {
+		return comment;
+	}
+
+	public void setComment(Set<Comment> comment) {
+		this.comment = comment;
+	}
+
 	@Override
 	public String toString() {
-		return "Post [id=" + id + ", title=" + title + ", description=" + description + ", content=" + content + "]";
+		return "Post [id=" + id + ", title=" + title + ", description=" + description + ", content=" + content
+				+ ", comment=" + comment + "]";
 	}
-	
+
 }
