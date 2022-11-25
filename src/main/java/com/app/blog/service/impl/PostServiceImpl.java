@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.app.blog.entity.Post;
@@ -37,8 +38,8 @@ public class PostServiceImpl implements PostService {
 //		return posts.stream().map(l -> mapToDTO(l)).collect(Collectors.toList());
 //
 //	}
-	
-	//get all post using pagination
+
+	// get all post using pagination
 //	public List<PostDto> getAllPosts(int pageNo,int pageSize){
 //		
 //		Pageable pageable = PageRequest.of(pageNo, pageSize);
@@ -50,24 +51,48 @@ public class PostServiceImpl implements PostService {
 //		return listOfPosts.stream().map(l -> mapToDTO(l)).collect(Collectors.toList());
 //		
 //	}
-	
-	//get all post using customize pagination
-	public PostResponse getAllPosts(int pageNo, int pageSize){
-		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		Page<Post> posts= postRepository.findAll(pageable);
+
+	// get all post using customize pagination
+//	public PostResponse getAllPosts(int pageNo, int pageSize) {
+//		Pageable pageable = PageRequest.of(pageNo, pageSize);
+//		Page<Post> posts = postRepository.findAll(pageable);
+//
+//		List<Post> listOfPosts = posts.getContent();
+//		List<PostDto> content = listOfPosts.stream().map(l -> mapToDTO(l)).collect(Collectors.toList());
+//
+//		PostResponse postResponse = new PostResponse();
+//		postResponse.setContent(content);
+//		postResponse.setTotalPages(posts.getTotalPages());
+//		postResponse.setTotalElements(posts.getNumberOfElements());
+//		postResponse.setLast(posts.isLast());
+//		postResponse.setPageSize(posts.getSize());
+//		postResponse.setPageNo(posts.getNumber());
+//
+//		return postResponse;
+//	}
+
+	// get all post using customize pagination and sorting
+	public PostResponse getAllPosts(int pageNo, int pageSize, String sortBy,String sortDir) {
+//		Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 		
+		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending(): Sort.by(sortBy).descending();	
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+		Page<Post> posts = postRepository.findAll(pageable);
 		List<Post> listOfPosts = posts.getContent();
+
 		List<PostDto> content = listOfPosts.stream().map(l -> mapToDTO(l)).collect(Collectors.toList());
-		
+
 		PostResponse postResponse = new PostResponse();
 		postResponse.setContent(content);
-		postResponse.setTotalPages(posts.getTotalPages());
-		postResponse.setTotalElements(posts.getNumberOfElements());
-		postResponse.setLast(posts.isLast());
-		postResponse.setPageSize(posts.getSize());
 		postResponse.setPageNo(posts.getNumber());
-		
+		postResponse.setPageSize(posts.getSize());
+		postResponse.setTotalElements(posts.getTotalElements());
+		postResponse.setTotalPages(posts.getTotalPages());
+		postResponse.setLast(posts.isLast());
+
 		return postResponse;
+
 	}
 
 	@Override
@@ -88,13 +113,13 @@ public class PostServiceImpl implements PostService {
 
 		return mapToDTO(updatePost);
 	}
-	
+
 	public void deletePost(long id) {
 		Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
-		
+
 		postRepository.delete(post);
 	}
-	
+
 	private PostDto mapToDTO(Post post) {
 
 		PostDto postDto = new PostDto();
@@ -116,6 +141,5 @@ public class PostServiceImpl implements PostService {
 
 		return post;
 	}
-	
 
 }

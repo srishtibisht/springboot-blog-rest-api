@@ -21,6 +21,7 @@ import com.app.blog.payload.PostDto;
 import com.app.blog.payload.PostResponse;
 import com.app.blog.service.PostService;
 import com.app.blog.service.impl.PostServiceImpl;
+import com.app.blog.utils.AppConstants;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -46,11 +47,22 @@ public class PostController {
 //		return postService.getAllPosts(pageNo,pageSize);
 //	}
 	
+//	@GetMapping
+//	public PostResponse getAllPost(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+//			@RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize) {
+//
+//		return postService.getAllPosts(pageNo,pageSize);
+//	}
+	
 	@GetMapping
-	public PostResponse getAllPost(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-			@RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize) {
-
-		return postService.getAllPosts(pageNo,pageSize);
+	public PostResponse getAllPost(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+			@RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+			@RequestParam(value="sortDir",defaultValue = AppConstants.DEFAULT_SORT_DIRECTION,required = false) String sortDir) {
+		
+		
+		return postService.getAllPosts(pageNo, pageSize,sortBy,sortDir);
+		
 	}
 
 	@GetMapping("/{id}")
